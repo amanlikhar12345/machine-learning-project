@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Salary Predictor</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💼 Salary Predictor</h1>
+
+<p>
+Predict salary using Machine Learning
+</p>
+
+<div class="card">
+
+<input
+type="number"
+id="age"
+placeholder="Age">
+
+<input
+type="number"
+id="experience"
+placeholder="Years of Experience">
+
+<button onclick="predictSalary()">
+
+Predict Salary
+
+</button>
+
+<h2 id="result"></h2>
+
+</div>
+
+</div>
+
+<script src="{{ url_for('static',filename='script.js') }}"></script>
+
+</body>
+
+</html>

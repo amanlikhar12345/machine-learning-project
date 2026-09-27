@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Used Car Price Predictor</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+
+<div class="container">
+  <header class="header">
+    <div class="icon">🚗</div>
+    <h1>Used Car Price Predictor</h1>
+    <p>Powered by a Gradient Boosting Regressor</p>
+  </header>
+
+  <form id="predictForm" class="card">
+    <div class="grid">
+
+      <div class="field">
+        <label for="id">Listing ID</label>
+        <input type="number" id="id" name="id" placeholder="e.g. 7301591234" required>
+        <span class="hint">Internal record identifier used by the trained model</span>
+      </div>
+
+      <div class="field">
+        <label for="year">Year</label>
+        <input type="number" id="year" name="year" placeholder="e.g. 2015" min="1900" max="2026" required>
+        <span class="hint">Manufacturing year of the vehicle</span>
+      </div>
+
+      <div class="field">
+        <label for="odometer">Odometer (miles)</label>
+        <input type="number" id="odometer" name="odometer" placeholder="e.g. 65000" min="0" required>
+        <span class="hint">Total distance driven</span>
+      </div>
+
+      <div class="field">
+        <label for="lat">Latitude</label>
+        <input type="number" step="any" id="lat" name="lat" placeholder="e.g. 40.7128" min="-90" max="90" required>
+        <span class="hint">Listing location latitude</span>
+      </div>
+
+      <div class="field">
+        <label for="long">Longitude</label>
+        <input type="number" step="any" id="long" name="long" placeholder="e.g. -74.0060" min="-180" max="180" required>
+        <span class="hint">Listing location longitude</span>
+      </div>
+
+      <div class="field">
+        <label>Use my location</label>
+        <button type="button" id="geoBtn" class="secondary-btn">📍 Autofill Lat / Long</button>
+        <span class="hint" id="geoStatus"></span>
+      </div>
+
+    </div>
+
+    <button type="submit" class="predict-btn" id="predictBtn">
+      <span id="btnText">Predict Price</span>
+      <span id="spinner" class="spinner hidden"></span>
+    </button>
+  </form>
+
+  <div id="resultCard" class="result-card hidden">
+    <div class="result-label">Estimated Price</div>
+    <div class="result-value" id="resultValue">$0</div>
+    <div class="result-sub" id="resultSub"></div>
+  </div>
+
+  <div id="errorCard" class="error-card hidden">
+    <span id="errorText"></span>
+  </div>
+
+  <div id="history" class="history hidden">
+    <h3>Recent Predictions</h3>
+    <ul id="historyList"></ul>
+  </div>
+</div>
+
+<footer class="footer">Model: Gradient Boosting Regressor · Features: id, year, odometer, lat, long</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

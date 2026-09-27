@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Forecasting</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape s1"></div>
+  <div class="shape s2"></div>
+  <div class="shape s3"></div>
+</div>
+
+<div class="app">
+
+  <header class="app-header">
+    <div class="logo">📈</div>
+    <h1>Sales Forecasting</h1>
+    <p>Decision Tree model &mdash; predict store sales in real time</p>
+  </header>
+
+  <div class="card">
+    <form id="predict-form">
+
+      <div class="grid">
+
+        <div class="field">
+          <label for="store_id">Store ID</label>
+          <input type="number" id="store_id" name="store_id" placeholder="e.g. 1024" required>
+        </div>
+
+        <div class="field">
+          <label for="store_type">Store Type</label>
+          <select id="store_type" name="store_type" required>
+            <option value="S1">S1</option>
+            <option value="S2">S2</option>
+            <option value="S3">S3</option>
+            <option value="S4">S4</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="location_type">Location Type</label>
+          <select id="location_type" name="location_type" required>
+            <option value="L1">L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+            <option value="L4">L4</option>
+            <option value="L5">L5</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="region_code">Region Code</label>
+          <select id="region_code" name="region_code" required>
+            <option value="R1">R1</option>
+            <option value="R2">R2</option>
+            <option value="R3">R3</option>
+            <option value="R4">R4</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Holiday</label>
+          <div class="toggle-group" id="holiday-toggle">
+            <button type="button" class="toggle-btn active" data-value="0">No</button>
+            <button type="button" class="toggle-btn" data-value="1">Yes</button>
+          </div>
+          <input type="hidden" id="holiday" name="holiday" value="0">
+        </div>
+
+        <div class="field">
+          <label>Discount</label>
+          <div class="toggle-group" id="discount-toggle">
+            <button type="button" class="toggle-btn active" data-value="No">No</button>
+            <button type="button" class="toggle-btn" data-value="Yes">Yes</button>
+          </div>
+          <input type="hidden" id="discount" name="discount" value="No">
+        </div>
+
+      </div>
+
+      <button type="submit" id="predict-btn" class="predict-btn">
+        <span class="btn-text">Predict Sales</span>
+        <span class="spinner" hidden></span>
+      </button>
+    </form>
+
+    <div id="result" class="result" hidden>
+      <div class="result-label">Predicted Sales</div>
+      <div class="result-value" id="result-value">$0.00</div>
+    </div>
+
+    <div id="error" class="error" hidden></div>
+  </div>
+
+  <div class="card history-card" id="history-card" hidden>
+    <h2>Recent Predictions</h2>
+    <ul id="history-list"></ul>
+  </div>
+
+  <footer>
+    <span>Model: DecisionTreeRegressor &nbsp;•&nbsp; Served with Flask</span>
+  </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

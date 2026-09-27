@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Consumption Predictor</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="app">
+  <header class="app-header">
+    <div class="header-icon">⚡</div>
+    <h1>Energy Consumption Predictor</h1>
+    <p>Adjust the building conditions below to estimate energy usage in real time.</p>
+  </header>
+
+  <div class="layout">
+
+    <!-- LEFT: Inputs -->
+    <div class="card inputs-card">
+      <h2>Building Conditions</h2>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="temperature">Temperature</label>
+          <span class="value-badge" id="temperatureVal">22 °C</span>
+        </div>
+        <input type="range" id="temperature" min="-10" max="45" step="0.5" value="22">
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="humidity">Humidity</label>
+          <span class="value-badge" id="humidityVal">50 %</span>
+        </div>
+        <input type="range" id="humidity" min="0" max="100" step="1" value="50">
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="squareFootage">Square Footage</label>
+          <span class="value-badge" id="squareFootageVal">1500 sqft</span>
+        </div>
+        <input type="range" id="squareFootage" min="200" max="10000" step="50" value="1500">
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="occupancy">Occupancy</label>
+          <span class="value-badge" id="occupancyVal">5 people</span>
+        </div>
+        <input type="range" id="occupancy" min="0" max="100" step="1" value="5">
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="renewable">Renewable Energy</label>
+          <span class="value-badge" id="renewableVal">10 kWh</span>
+        </div>
+        <input type="range" id="renewable" min="0" max="100" step="1" value="10">
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-field">
+          <span>Lighting Usage</span>
+          <label class="switch">
+            <input type="checkbox" id="lightingUsage">
+            <span class="slider-toggle"></span>
+          </label>
+          <span class="toggle-state" id="lightingState">Off</span>
+        </div>
+
+        <div class="toggle-field">
+          <span>Holiday</span>
+          <label class="switch">
+            <input type="checkbox" id="holiday">
+            <span class="slider-toggle"></span>
+          </label>
+          <span class="toggle-state" id="holidayState">No</span>
+        </div>
+      </div>
+
+      <button id="predictBtn" class="predict-btn">
+        <span id="btnText">Predict Energy Consumption</span>
+        <span id="btnSpinner" class="spinner hidden"></span>
+      </button>
+
+      <p id="errorMsg" class="error-msg hidden"></p>
+    </div>
+
+    <!-- RIGHT: Result -->
+    <div class="card result-card">
+      <h2>Prediction</h2>
+
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 200 120" class="gauge">
+          <path d="M 15 105 A 85 85 0 0 1 185 105" class="gauge-track"/>
+          <path d="M 15 105 A 85 85 0 0 1 185 105" class="gauge-fill" id="gaugeFill"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-number" id="resultNumber">--</div>
+          <div class="gauge-unit">kWh</div>
+        </div>
+      </div>
+
+      <div class="result-status" id="resultStatus">Adjust the sliders and click predict</div>
+
+      <div class="history">
+        <h3>Recent Predictions</h3>
+        <ul id="historyList" class="history-list">
+          <li class="history-empty">No predictions yet</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="app-footer">
+    Model: Linear Regression (degree-2 polynomial features) · Served via Flask
+  </footer>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

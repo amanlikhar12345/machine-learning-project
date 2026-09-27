@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="header">
+
+            <div class="icon">
+                🏠
+            </div>
+
+            <h1>House Price Predictor</h1>
+
+            <p>
+                Predict house prices using Machine Learning
+            </p>
+
+        </div>
+
+        <form action="/predict" method="POST" id="predictionForm">
+
+            <div class="grid">
+
+                <div class="input-box">
+                    <label>
+                        <i class="fa-solid fa-house"></i>
+                        Living Area (sqft)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="sqft_living"
+                        placeholder="e.g. 2500"
+                        required>
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        <i class="fa-solid fa-building"></i>
+                        Above Ground Area
+                    </label>
+
+                    <input
+                        type="number"
+                        name="sqft_above"
+                        placeholder="e.g. 1800"
+                        required>
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        <i class="fa-solid fa-bath"></i>
+                        Bathrooms
+                    </label>
+
+                    <input
+                        type="number"
+                        name="bathrooms"
+                        step="0.5"
+                        placeholder="e.g. 2.5"
+                        required>
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        <i class="fa-solid fa-eye"></i>
+                        View Rating
+                    </label>
+
+                    <select name="view">
+
+                        <option value="0">0 - No View</option>
+
+                        <option value="1">1</option>
+
+                        <option value="2">2</option>
+
+                        <option value="3">3</option>
+
+                        <option value="4">4 - Excellent View</option>
+
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        <i class="fa-solid fa-layer-group"></i>
+                        Basement Area
+                    </label>
+
+                    <input
+                        type="number"
+                        name="sqft_basement"
+                        placeholder="e.g. 700"
+                        required>
+                </div>
+
+            </div>
+
+            <div class="button-group">
+
+                <button type="submit" class="predict-btn">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    Predict Price
+
+                </button>
+
+                <button type="reset" class="reset-btn">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Reset
+
+                </button>
+
+            </div>
+
+        </form>
+
+        {% if prediction_text %}
+
+        <div class="result-card">
+
+            <h2>
+
+                <i class="fa-solid fa-dollar-sign"></i>
+
+                Prediction
+
+            </h2>
+
+            <h1>{{ prediction_text }}</h1>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

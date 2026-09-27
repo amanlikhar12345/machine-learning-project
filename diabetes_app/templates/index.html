@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glucose Panel · Diabetes Risk Screening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">＋</span>
+    <span class="brand-text">GLUCOSE<span class="brand-thin">PANEL</span></span>
+  </div>
+  <div class="ecg-strip" aria-hidden="true">
+    <svg viewBox="0 0 600 60" preserveAspectRatio="none">
+      <polyline id="ecgLine" points="0,30 60,30 75,30 85,8 95,52 105,30 160,30 175,30 185,15 195,45 205,30 260,30 280,30 290,10 300,50 310,30 370,30 385,30 395,10 405,50 415,30 470,30 490,30 500,12 510,48 520,30 580,30 600,30" />
+    </svg>
+  </div>
+</header>
+
+<main class="layout">
+
+  {% if scaler_missing %}
+  <div class="banner-warn" role="alert">
+    <strong>Calibration notice —</strong> scaler.pkl was not found in <code>model/</code>. Inputs are being sent to the network unscaled, so probabilities will not match the trained model's real behavior until it's added.
+  </div>
+  {% endif %}
+
+  <section class="panel form-panel">
+    <div class="panel-head">
+      <h1>Patient Vitals Intake</h1>
+      <p class="panel-sub">Five markers, screened against a trained artificial neural network.</p>
+    </div>
+
+    <form id="predictForm" novalidate>
+
+      <div class="field" data-feature="Pregnancies">
+        <div class="field-label-row">
+          <label for="Pregnancies">Pregnancies</label>
+          <output class="field-value" id="Pregnancies_val">0</output>
+        </div>
+        <input type="range" id="Pregnancies" name="Pregnancies" min="0" max="17" step="1" value="0">
+        <div class="field-scale"><span>0</span><span>17+</span></div>
+      </div>
+
+      <div class="field" data-feature="Glucose">
+        <div class="field-label-row">
+          <label for="Glucose">Plasma Glucose <span class="unit">mg/dL</span></label>
+          <output class="field-value" id="Glucose_val">100</output>
+        </div>
+        <input type="range" id="Glucose" name="Glucose" min="40" max="260" step="1" value="100">
+        <div class="field-scale"><span>40</span><span>260</span></div>
+      </div>
+
+      <div class="field" data-feature="BMI">
+        <div class="field-label-row">
+          <label for="BMI">Body Mass Index <span class="unit">kg/m²</span></label>
+          <output class="field-value" id="BMI_val">24.0</output>
+        </div>
+        <input type="range" id="BMI" name="BMI" min="12" max="60" step="0.1" value="24.0">
+        <div class="field-scale"><span>12</span><span>60</span></div>
+      </div>
+
+      <div class="field" data-feature="DiabetesPedigreeFunction">
+        <div class="field-label-row">
+          <label for="DiabetesPedigreeFunction">Diabetes Pedigree Function <span class="unit">heredity score</span></label>
+          <output class="field-value" id="DiabetesPedigreeFunction_val">0.40</output>
+        </div>
+        <input type="range" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction" min="0.05" max="2.5" step="0.01" value="0.40">
+        <div class="field-scale"><span>0.05</span><span>2.50</span></div>
+      </div>
+
+      <div class="field" data-feature="Age">
+        <div class="field-label-row">
+          <label for="Age">Age <span class="unit">years</span></label>
+          <output class="field-value" id="Age_val">33</output>
+        </div>
+        <input type="range" id="Age" name="Age" min="1" max="100" step="1" value="33">
+        <div class="field-scale"><span>1</span><span>100</span></div>
+      </div>
+
+      <button type="submit" class="run-btn">
+        <span>Run Screening</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p id="formError" class="form-error" hidden></p>
+    </form>
+  </section>
+
+  <section class="panel result-panel">
+    <div class="panel-head">
+      <h2>Screening Readout</h2>
+      <p class="panel-sub">Model confidence, live.</p>
+    </div>
+
+    <div class="gauge-wrap">
+      <svg class="gauge" viewBox="0 0 220 130" aria-hidden="true">
+        <path class="gauge-track" d="M20 110 A90 90 0 0 1 200 110" />
+        <path class="gauge-fill" id="gaugeFill" d="M20 110 A90 90 0 0 1 200 110" />
+        <line class="gauge-needle" id="gaugeNeedle" x1="110" y1="110" x2="110" y2="35" />
+        <circle class="gauge-hub" cx="110" cy="110" r="6" />
+      </svg>
+      <div class="gauge-readout">
+        <span class="gauge-number" id="probNumber">--</span>
+        <span class="gauge-unit">probability</span>
+      </div>
+    </div>
+
+    <div class="verdict" id="verdict">
+      <span class="verdict-badge" id="verdictBadge">AWAITING INPUT</span>
+      <p class="verdict-text" id="verdictText">Adjust the vitals on the left and run a screening to see the model's read.</p>
+    </div>
+
+    <div class="feature-echo" id="featureEcho" hidden>
+      <div class="echo-row"><span>Pregnancies</span><b id="echo_Pregnancies">–</b></div>
+      <div class="echo-row"><span>Glucose</span><b id="echo_Glucose">–</b></div>
+      <div class="echo-row"><span>BMI</span><b id="echo_BMI">–</b></div>
+      <div class="echo-row"><span>Pedigree Fn.</span><b id="echo_DiabetesPedigreeFunction">–</b></div>
+      <div class="echo-row"><span>Age</span><b id="echo_Age">–</b></div>
+    </div>
+
+    <p class="disclaimer">Screening estimate only — not a diagnosis. Consult a clinician for medical advice.</p>
+  </section>
+
+</main>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

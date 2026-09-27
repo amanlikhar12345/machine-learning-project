@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Real Estate Price Predictor</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="container">
+  <header class="app-header">
+    <h1>🏠 Real Estate Price Predictor</h1>
+    <p class="subtitle">Gradient Boosting Regression &middot; Taiwan Housing Dataset</p>
+  </header>
+
+  <div class="main-grid">
+
+    <!-- FORM CARD -->
+    <div class="card form-card">
+      <h2>Property Details</h2>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="x1">Transaction Date</label>
+          <span class="value-badge" id="x1-val">2013.17</span>
+        </div>
+        <input type="range" id="x1" min="2012" max="2014" step="0.01" value="2013.17" />
+        <div class="range-hint"><span>2012.0</span><span>2014.0</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="x2">House Age (years)</label>
+          <span class="value-badge" id="x2-val">15</span>
+        </div>
+        <input type="range" id="x2" min="0" max="45" step="0.1" value="15" />
+        <div class="range-hint"><span>0</span><span>45</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="x3">Distance to Nearest MRT (m)</label>
+          <span class="value-badge" id="x3-val">500</span>
+        </div>
+        <input type="range" id="x3" min="0" max="6500" step="1" value="500" />
+        <div class="range-hint"><span>0 m</span><span>6500 m</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <label for="x4">Convenience Stores Nearby</label>
+          <span class="value-badge" id="x4-val">5</span>
+        </div>
+        <input type="range" id="x4" min="0" max="10" step="1" value="5" />
+        <div class="range-hint"><span>0</span><span>10</span></div>
+      </div>
+
+      <div class="field two-col">
+        <div class="sub-field">
+          <div class="field-label">
+            <label for="x5">Latitude</label>
+          </div>
+          <input type="number" id="x5" min="24.93" max="25.02" step="0.0001" value="24.9800" />
+        </div>
+        <div class="sub-field">
+          <div class="field-label">
+            <label for="x6">Longitude</label>
+          </div>
+          <input type="number" id="x6" min="121.47" max="121.57" step="0.0001" value="121.5300" />
+        </div>
+      </div>
+
+      <button id="mapToggle" class="secondary-btn" type="button">📍 Pick Location on Map</button>
+
+      <div id="mapPreview" class="map-preview hidden">
+        <svg id="mapSvg" viewBox="0 0 300 220" class="map-svg">
+          <rect x="0" y="0" width="300" height="220" fill="#eef2f7" rx="10"></rect>
+          <g id="gridLines"></g>
+          <circle id="mapPin" r="7" fill="#ef4444" stroke="white" stroke-width="2"></circle>
+        </svg>
+        <p class="map-hint">Click anywhere on the grid to set latitude / longitude</p>
+      </div>
+
+      <button id="predictBtn" class="predict-btn" type="button">
+        <span id="btnText">Predict Price</span>
+        <span id="btnSpinner" class="spinner hidden"></span>
+      </button>
+
+      <div id="errorBox" class="error-box hidden"></div>
+    </div>
+
+    <!-- RESULT CARD -->
+    <div class="card result-card">
+      <h2>Prediction</h2>
+
+      <div class="result-display">
+        <div class="price-circle" id="priceCircle">
+          <span id="priceValue">--</span>
+          <span class="price-unit">10k NTD / ping</span>
+        </div>
+      </div>
+
+      <div class="usd-approx" id="usdApprox"></div>
+
+      <div class="summary-list" id="summaryList">
+        <p class="placeholder-text">Adjust the sliders and click <strong>Predict Price</strong> to see the estimated house price per unit area.</p>
+      </div>
+
+      <h3 class="history-title">Prediction History</h3>
+      <div id="historyList" class="history-list">
+        <p class="placeholder-text small">No predictions yet.</p>
+      </div>
+      <button id="clearHistory" class="text-btn hidden">Clear history</button>
+    </div>
+
+  </div>
+
+  <footer class="app-footer">
+    <p>Model: <strong>GradientBoostingRegressor</strong> (scikit-learn) &middot; Served via Flask</p>
+  </footer>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
